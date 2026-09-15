@@ -1,1 +1,542 @@
-$(cat /tmp/claude-0/-home-user-Claude-VBA/4ffbb1e4-25f7-55a7-bdca-a7fe710d813c/scratchpad/vbabridge-site-index.html)
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VBABridge</title>
+<meta name="description" content="VBABridge connects Claude directly to a running Excel VBA Editor via COM automation — read, write, and run real VBA, live, on your own machine.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+  :root{
+    --paper:#F1EFE7;
+    --ink:#171B21;
+    --ink-soft:#4B5058;
+    --panel:#E7E3D6;
+    --panel-2:#DCD6C4;
+    --line:#C9C1A8;
+    --accent:#A6650C;
+    --accent-ink:#171B21;
+    --highlight:#F5D64A;
+    --highlight-ink:#171B21;
+    --accent2:#1F3A57;
+    --accent2-ink:#F1EFE7;
+    --danger:#9A3A22;
+    --danger-bg:#F1DCCF;
+    --good:#3D6B3A;
+    --mono:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+    --sans:'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --radius-sharp: 2px;
+    --radius-soft: 10px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#12161D;
+      --ink:#ECE8DC;
+      --ink-soft:#A7ADB8;
+      --panel:#1B212B;
+      --panel-2:#232B37;
+      --line:#38414F;
+      --accent:#E3A63C;
+      --accent-ink:#12161D;
+      --highlight:#7A5F1A;
+      --highlight-ink:#F5EBC9;
+      --accent2:#7FA8D1;
+      --accent2-ink:#12161D;
+      --danger:#E2846A;
+      --danger-bg:#3A2620;
+      --good:#7CB37A;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#12161D;
+    --ink:#ECE8DC;
+    --ink-soft:#A7ADB8;
+    --panel:#1B212B;
+    --panel-2:#232B37;
+    --line:#38414F;
+    --accent:#E3A63C;
+    --accent-ink:#12161D;
+    --highlight:#7A5F1A;
+    --highlight-ink:#F5EBC9;
+    --accent2:#7FA8D1;
+    --accent2-ink:#12161D;
+    --danger:#E2846A;
+    --danger-bg:#3A2620;
+    --good:#7CB37A;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:16px;
+    line-height:1.6;
+    padding-inline:20px;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--accent2);}
+  .wrap{max-width:1040px;margin-inline:auto;}
+  .narrow{max-width:640px;}
+
+  h1,h2,h3{font-family:var(--mono);font-weight:700;text-wrap:balance;margin:0;letter-spacing:-0.01em;}
+  h1{font-size:clamp(2rem,4.6vw,3.4rem);line-height:1.06;}
+  h2{font-size:clamp(1.5rem,3vw,2rem);line-height:1.18;}
+  h3{font-size:1.05rem;letter-spacing:0;}
+  p{margin:0;}
+  .lede{font-size:1.15rem;color:var(--ink-soft);max-width:52ch;}
+  .label{
+    font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+    padding-block:22px;
+  }
+  .wordmark{
+    font-family:var(--mono);font-weight:700;font-size:1rem;letter-spacing:-0.01em;
+    display:flex;align-items:center;gap:8px;
+  }
+  .wordmark .dot{width:8px;height:8px;background:var(--accent);display:inline-block;}
+  .topbar nav a{
+    font-family:var(--mono);font-size:.85rem;text-decoration:none;color:var(--ink);
+    border-bottom:1px solid var(--line);padding-bottom:2px;
+  }
+  .topbar nav a:hover{border-color:var(--accent);color:var(--accent);}
+
+  /* ---------- hero ---------- */
+  .hero{padding-block:28px 56px;}
+  .eyebrow{
+    font-family:var(--mono);font-size:.85rem;color:var(--good);
+    margin-bottom:14px;display:inline-block;
+  }
+  .hero h1{margin-bottom:18px;}
+  .hero .lede{margin-bottom:30px;}
+
+  .cta-row{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-bottom:48px;}
+  .btn{
+    font-family:var(--mono);font-size:.9rem;font-weight:600;
+    padding:12px 20px;border-radius:var(--radius-sharp);
+    text-decoration:none;display:inline-flex;align-items:center;gap:8px;
+    border:1px solid transparent;cursor:pointer;
+  }
+  .btn-primary{background:var(--accent);color:var(--accent-ink);}
+  .btn-primary:hover{filter:brightness(1.06);}
+  .btn-ghost{background:transparent;color:var(--ink);border-color:var(--line);}
+  .btn-ghost:hover{border-color:var(--ink);}
+
+  /* ---------- chrome window (the VBE-styled hero device) ---------- */
+  .chrome{
+    border:1px solid var(--line);
+    border-radius:var(--radius-sharp);
+    background:var(--panel);
+    overflow:hidden;
+    box-shadow:0 18px 40px -24px rgba(0,0,0,.35);
+    opacity:0;animation:rise .5s ease-out .05s forwards;
+  }
+  @keyframes rise{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+  @media (prefers-reduced-motion:reduce){.chrome{animation:none;opacity:1;}}
+
+  .chrome-bar{
+    display:flex;align-items:center;gap:10px;
+    background:var(--accent2);color:var(--accent2-ink);
+    padding:9px 12px;font-family:var(--mono);font-size:.78rem;
+  }
+  .chrome-bar .ctrl{width:10px;height:10px;background:var(--accent2-ink);opacity:.5;}
+  .chrome-bar .title{margin-left:4px;opacity:.9;}
+  .chrome-body{
+    display:grid;grid-template-columns:1fr 1fr;
+  }
+  @media (max-width:680px){.chrome-body{grid-template-columns:1fr;}}
+  .pane{padding:16px 18px;font-family:var(--mono);font-size:.82rem;line-height:1.65;overflow-x:auto;}
+  .pane + .pane{border-top:1px solid var(--line);}
+  @media (min-width:681px){
+    .pane + .pane{border-top:none;border-left:1px solid var(--line);}
+  }
+  .pane .tag{
+    font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--ink-soft);margin-bottom:10px;display:block;
+  }
+  .code-line{white-space:pre;color:var(--ink);}
+  .code-comment{color:var(--ink-soft);}
+  .code-kw{color:var(--accent2);}
+  .code-hl{
+    background:var(--highlight);color:var(--highlight-ink);
+    display:block;margin-inline:-18px;padding-inline:18px;
+    animation:pulse 2.4s ease-in-out infinite;
+  }
+  @media (prefers-reduced-motion:reduce){.code-hl{animation:none;}}
+  @keyframes pulse{0%,100%{filter:brightness(1);}50%{filter:brightness(1.12);}}
+  .code-err{color:var(--danger);margin-top:10px;display:block;}
+  .code-ok{color:var(--good);margin-top:10px;display:block;}
+
+  /* ---------- watch-it-work demo (looping, choreographed on one shared clock) ---------- */
+  .demo{
+    display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);
+    border:1px solid var(--line);border-radius:var(--radius-soft);overflow:hidden;
+  }
+  @media (max-width:680px){.demo{grid-template-columns:1fr;}}
+  .demo-pane{background:var(--paper);padding:20px 22px;min-height:290px;}
+  .demo-pane-label{
+    font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--ink-soft);margin-bottom:14px;
+  }
+  .demo-vbe{background:var(--panel-2);}
+  .demo-vbe .demo-pane-label{color:var(--ink-soft);}
+
+  .demo-msg{margin-bottom:16px;}
+  .demo-user{
+    font-family:var(--mono);font-size:.86rem;
+    background:var(--panel);border:1px solid var(--line);border-radius:14px 14px 14px 2px;
+    padding:10px 14px;display:inline-block;
+  }
+  .demo-type-prompt{
+    display:inline-block;overflow:hidden;white-space:nowrap;max-width:100%;vertical-align:top;
+    border-right:2px solid var(--accent);
+    animation:demoPrompt 9s ease-in-out infinite;
+  }
+  .demo-tool-chip{
+    font-family:var(--mono);font-size:.72rem;color:var(--accent2);
+    background:var(--panel);border:1px solid var(--line);border-radius:20px;
+    padding:4px 11px;display:inline-block;margin-bottom:14px;
+    animation:demoFadeChip 9s ease-in-out infinite;
+  }
+  .demo-assistant{
+    color:var(--ink-soft);font-size:.9rem;
+    animation:demoFadeAssistant 9s ease-in-out infinite;
+  }
+  .demo-assistant code{font-family:var(--mono);color:var(--ink);font-size:.85em;}
+
+  .demo-tree{font-family:var(--mono);font-size:.8rem;margin-bottom:16px;}
+  .demo-tree-item{padding-block:2px;color:var(--ink-soft);}
+  .demo-tree-item.indent{padding-left:14px;}
+  .demo-tree-item.indent2{padding-left:28px;}
+  .demo-new-item{
+    color:var(--ink);font-weight:600;
+    animation:demoFadeTree 9s ease-in-out infinite;
+  }
+  .demo-new-tag{
+    font-size:.65rem;letter-spacing:.04em;text-transform:uppercase;
+    background:var(--highlight);color:var(--highlight-ink);
+    border-radius:20px;padding:1px 7px;margin-left:6px;
+  }
+  .demo-code{
+    font-family:var(--mono);font-size:.78rem;line-height:1.6;overflow:hidden;
+    animation:demoCode 9s ease-in-out infinite;
+  }
+  .demo-check{
+    color:var(--good);font-family:var(--mono);font-size:.82rem;margin-top:12px;
+    animation:demoCheck 9s ease-in-out infinite;
+  }
+
+  @keyframes demoPrompt{0%,3%{width:0;}24%,97%{width:100%;}100%{width:0;}}
+  @keyframes demoFadeChip{0%,29%{opacity:0;transform:translateY(6px);}33%,96%{opacity:1;transform:none;}100%{opacity:0;transform:translateY(6px);}}
+  @keyframes demoFadeAssistant{0%,35%{opacity:0;transform:translateY(6px);}39%,96%{opacity:1;transform:none;}100%{opacity:0;transform:translateY(6px);}}
+  @keyframes demoFadeTree{0%,41%{opacity:0;transform:translateX(-6px);}45%,96%{opacity:1;transform:none;}100%{opacity:0;transform:translateX(-6px);}}
+  @keyframes demoCode{0%,47%{max-height:0;opacity:0;}50%{opacity:1;}80%,96%{max-height:220px;opacity:1;}100%{max-height:0;opacity:0;}}
+  @keyframes demoCheck{0%,79%{opacity:0;transform:translateY(6px);}84%,96%{opacity:1;transform:none;}100%{opacity:0;transform:translateY(6px);}}
+
+  @media (prefers-reduced-motion:reduce){
+    .demo-type-prompt{animation:none;width:auto;border-right:none;}
+    .demo-tool-chip,.demo-assistant,.demo-new-item,.demo-check{animation:none;opacity:1;transform:none;}
+    .demo-code{animation:none;max-height:220px;opacity:1;}
+  }
+
+  /* ---------- sections ---------- */
+  section{padding-block:56px;border-top:1px solid var(--line);}
+  .section-head{margin-bottom:32px;}
+  .section-head .label{margin-bottom:10px;display:block;}
+
+  .problem-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:start;}
+  @media (max-width:760px){.problem-grid{grid-template-columns:1fr;}}
+  .stat-box{
+    border:1px solid var(--line);border-radius:var(--radius-soft);
+    background:var(--panel);padding:20px;
+  }
+  .stat-box .n{font-family:var(--mono);font-size:2.1rem;font-weight:700;font-variant-numeric:tabular-nums;}
+  .stat-box .l{color:var(--ink-soft);font-size:.85rem;margin-top:4px;}
+
+  .price-row{display:flex;gap:14px;margin-block:22px 20px;flex-wrap:wrap;}
+  .price-tile{
+    border:1px solid var(--line);border-radius:var(--radius-soft);
+    background:var(--panel);padding:16px 22px;flex:1;min-width:140px;
+  }
+  .price-tile .n{font-family:var(--mono);font-size:1.9rem;font-weight:700;font-variant-numeric:tabular-nums;}
+  .price-tile .l{color:var(--ink-soft);font-size:.8rem;margin-top:2px;}
+  .price-note{color:var(--ink-soft);font-size:.85rem;margin-top:2px;}
+
+  .steps{display:grid;gap:0;counter-reset:step;}
+  .step{
+    display:grid;grid-template-columns:52px 1fr;gap:18px;padding-block:20px;
+    border-top:1px solid var(--line);
+  }
+  .step:first-child{border-top:none;}
+  .step .num{
+    font-family:var(--mono);font-size:.85rem;color:var(--accent);
+    counter-increment:step;
+  }
+  .step .num::before{content: counter(step, decimal-leading-zero);}
+  .step h3{margin-bottom:6px;}
+  .step p{color:var(--ink-soft);max-width:60ch;}
+
+  .cap-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--radius-soft);overflow:hidden;}
+  @media (max-width:680px){.cap-grid{grid-template-columns:1fr;}}
+  .cap{background:var(--paper);padding:22px;}
+  .cap h3{margin-bottom:8px;}
+  .cap p{color:var(--ink-soft);font-size:.92rem;margin-bottom:12px;}
+  .cap ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px;}
+  .cap li{
+    font-family:var(--mono);font-size:.74rem;background:var(--panel);
+    border:1px solid var(--line);border-radius:20px;padding:3px 9px;color:var(--ink-soft);
+  }
+
+  .proof{
+    background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-soft);
+    padding:28px;
+  }
+  .proof-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-bottom:22px;}
+  @media (max-width:680px){.proof-stats{grid-template-columns:repeat(2,1fr);gap:20px;}}
+  .proof-stats > div{border-left:1px solid var(--line);padding-left:16px;}
+  .proof-stats > div:first-child{border-left:none;padding-left:0;}
+  @media (max-width:680px){.proof-stats > div{border-left:none;padding-left:0;}}
+  .proof-stats .n{font-family:var(--mono);font-weight:700;font-size:1.9rem;font-variant-numeric:tabular-nums;}
+  .proof-stats .l{font-size:.78rem;color:var(--ink-soft);margin-top:2px;}
+  .proof-note{color:var(--ink-soft);font-size:.92rem;border-top:1px solid var(--line);padding-top:18px;}
+  .proof-note b{color:var(--ink);font-weight:600;}
+
+  .req-list{display:grid;gap:14px;margin-top:20px;}
+  .req-item{display:grid;grid-template-columns:20px 1fr;gap:12px;}
+  .req-item .mark{font-family:var(--mono);color:var(--accent2);}
+  .req-item p{color:var(--ink-soft);}
+
+  /* ---------- access / form ---------- */
+  .access{
+    display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:start;
+  }
+  @media (max-width:760px){.access{grid-template-columns:1fr;}}
+  .confirm{
+    border:1px solid var(--line);border-radius:var(--radius-soft);background:var(--panel);
+    padding:24px;
+  }
+  .confirm .n{font-family:var(--mono);font-weight:700;color:var(--good);margin-bottom:8px;display:block;}
+
+  footer{padding-block:36px 60px;border-top:1px solid var(--line);}
+  footer .row{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-size:.82rem;color:var(--ink-soft);}
+  footer .row a{color:var(--ink-soft);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <div class="wordmark"><span class="dot"></span>VBABridge</div>
+    <nav><a href="#access">Pricing &amp; access</a></nav>
+  </div>
+
+  <section class="hero" style="border-top:none;padding-top:8px;">
+    <span class="eyebrow">' Connects Claude to a running VBA Editor</span>
+    <h1>The VBA nobody wants&nbsp;to&nbsp;touch.<br>Claude just did.</h1>
+    <p class="lede">VBABridge puts Claude directly inside a live Excel session — reading, writing, and running real VBA through the same Editor your macros have always lived in. Not an export. Not a copy. The actual code, live.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#access">Get a license</a>
+      <a class="btn btn-ghost" href="#how">See how it connects</a>
+    </div>
+
+    <div class="chrome">
+      <div class="chrome-bar">
+        <span class="ctrl"></span><span class="ctrl"></span><span class="ctrl"></span>
+        <span class="title">Microsoft Visual Basic for Applications — ExportSummary.bas</span>
+      </div>
+      <div class="chrome-body">
+        <div class="pane">
+          <span class="tag">Before — Claude reads the failure</span>
+<span class="code-line"><span class="code-kw">Sub</span> ExportSummary()
+    <span class="code-kw">Dim</span> shp <span class="code-kw">As</span> Shape
+    <span class="code-kw">For Each</span> shp <span class="code-kw">In</span> ws.Shapes</span><span class="code-line code-hl">        txt = shp.TextFrame2.TextRange.Text</span><span class="code-line">    <span class="code-kw">Next</span> shp
+<span class="code-kw">End Sub</span></span>
+          <span class="code-err">Run-time error '-2147352567':
+Exception occurred.</span>
+        </div>
+        <div class="pane">
+          <span class="tag">After — Claude writes the fix, and runs it</span>
+<span class="code-line"><span class="code-kw">Sub</span> ExportSummary()
+    <span class="code-kw">Dim</span> shp <span class="code-kw">As</span> Shape
+    <span class="code-kw">On Error Resume Next</span>
+    <span class="code-kw">For Each</span> shp <span class="code-kw">In</span> ws.Shapes
+        txt = shp.TextFrame.Characters.Text
+    <span class="code-kw">Next</span> shp
+<span class="code-kw">End Sub</span></span>
+          <span class="code-ok">✓ Compiled. Ran in 0.4s. 12 shapes read.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="problem-grid">
+      <div>
+        <span class="label">The problem</span>
+        <h2 style="margin-bottom:16px;">Every legacy workbook has a maintainer nobody hired.</h2>
+        <p class="lede" style="max-width:none;">Every finance team, plant floor, and ops department has one: a workbook nobody remembers building, doing work nobody wants to inherit. Thousands of lines of <code style="font-family:var(--mono)">Sub</code> and <code style="font-family:var(--mono)">Function</code> procedures written for a version of Excel that's two decades gone, held together by named ranges and institutional memory. Opening the VBA Editor feels like defusing something — so mostly, nobody does. The workbook just keeps running, untouched, until it breaks.</p>
+      </div>
+      <div class="stat-box">
+        <span class="label" style="margin-bottom:14px;display:block;">Why Claude, and not a rewrite</span>
+        <p style="color:var(--ink-soft);font-size:.92rem;">Anthropic's own Claude for Excel add-in can't reach VBA at all — it's built on Office.js, which has no API for the VBA project. VBABridge closes that gap by driving Excel the same way the Editor itself does: COM automation, live, on your machine.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="section-head">
+      <span class="label">How it connects</span>
+      <h2>Four steps, no export in sight.</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <span class="num"></span>
+        <div><h3>Claude loads VBABridge</h3><p>As an MCP server, from Claude Desktop or Claude Code — one install, one config entry.</p></div>
+      </div>
+      <div class="step">
+        <span class="num"></span>
+        <div><h3>It attaches to your open Excel session</h3><p>Over COM automation — the same interface the VBA Editor itself is built on. No new Excel instance, no headless copy.</p></div>
+      </div>
+      <div class="step">
+        <span class="num"></span>
+        <div><h3>Claude reads, writes, and runs your actual VBA project</h3><p>Changes land in the Editor immediately. Open Alt+F11 mid-conversation and watch the module update live.</p></div>
+      </div>
+      <div class="step">
+        <span class="num"></span>
+        <div><h3>Nothing leaves your machine</h3><p>There's no upload and no cloud copy of your workbook. Claude is just another editor attached to the session you already have open.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="watch">
+    <div class="section-head">
+      <span class="label">Watch it work</span>
+      <h2>One instruction. The Editor updates live.</h2>
+    </div>
+    <div class="demo">
+      <div class="demo-pane demo-claude">
+        <div class="demo-pane-label">Claude</div>
+        <div class="demo-msg demo-user"><span class="demo-type-prompt">Add a macro that logs every edit to a new Audit Log sheet</span></div>
+        <div class="demo-tool-chip">Used vbabridge: write_vba_module</div>
+        <p class="demo-assistant">Added <code>modAuditLog</code> with a <code>Worksheet_Change</code> handler that logs the cell, its new value, and a timestamp.</p>
+      </div>
+      <div class="demo-pane demo-vbe">
+        <div class="demo-pane-label">Project — VBAProject (Workbook.xlsm)</div>
+        <div class="demo-tree">
+          <div class="demo-tree-item">Microsoft Excel Objects</div>
+          <div class="demo-tree-item indent">Modules</div>
+          <div class="demo-tree-item indent2">modMain</div>
+          <div class="demo-tree-item indent2">modSave</div>
+          <div class="demo-tree-item indent2 demo-new-item">modAuditLog <span class="demo-new-tag">new</span></div>
+        </div>
+        <div class="demo-code"><span class="code-line"><span class="code-kw">Sub</span> LogChange(target <span class="code-kw">As</span> Range)
+    <span class="code-kw">Dim</span> ws <span class="code-kw">As</span> Worksheet
+    <span class="code-kw">Set</span> ws = ThisWorkbook.Sheets("Audit Log")
+    ws.Cells(NextRow, 1) = <span class="code-kw">Now</span>
+    ws.Cells(NextRow, 2) = target.Address
+    ws.Cells(NextRow, 3) = target.Value
+<span class="code-kw">End Sub</span></span></div>
+        <div class="demo-check">✓ Module created. Compiled.</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <span class="label">What it can do</span>
+      <h2>Twelve tools, grouped the way you'd actually use them.</h2>
+    </div>
+    <div class="cap-grid">
+      <div class="cap">
+        <h3>Read &amp; map</h3>
+        <p>See the whole project before touching it — every module, every type, real line counts.</p>
+        <ul><li>list_vba_modules</li><li>read_vba_module</li><li>list_workbooks</li></ul>
+      </div>
+      <div class="cap">
+        <h3>Write &amp; extend</h3>
+        <p>Add a procedure without disturbing what's already there — and recover instantly if it does.</p>
+        <ul><li>write_vba_module</li><li>append_vba_module</li><li>delete_vba_module</li></ul>
+      </div>
+      <div class="cap">
+        <h3>Run &amp; debug</h3>
+        <p>Execute real macros and read real results, with a hard guard against a hung dialog.</p>
+        <ul><li>run_vba_macro</li><li>check_vba_compiles</li><li>reset_vba_execution</li></ul>
+      </div>
+      <div class="cap">
+        <h3>Safety net</h3>
+        <p>Every destructive call returns what it removed. Every session opens with a live readiness check.</p>
+        <ul><li>check_environment</li><li>save_workbook</li><li>previous_code / deleted_code</li></ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <span class="label">Proven, not promised</span>
+      <h2>Tested against a real production workbook — not a demo file.</h2>
+    </div>
+    <div class="proof">
+      <div class="proof-stats">
+        <div><div class="n">43</div><div class="l">VBA modules</div></div>
+        <div><div class="n">6,285</div><div class="l">lines of live VBA</div></div>
+        <div><div class="n">12</div><div class="l">tools exposed to Claude</div></div>
+        <div><div class="n">20s</div><div class="l">max wait before a hung macro is reported, not silently hung forever</div></div>
+      </div>
+      <p class="proof-note">During development, two real defects were found and fixed mid-session against that workbook — a COM threading bug that caused intermittent false "Excel not running" errors, and a silent module-overwrite trap that deleted a working macro. <b>Both were caught by running the tool against real code, not a mock.</b> That's the standard this was built to.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <span class="label">Requirements</span>
+      <h2>Windows and Excel. On purpose.</h2>
+    </div>
+    <p class="lede" style="max-width:none;">VBABridge drives Excel over COM automation — the same mechanism the VBA Editor itself is built on. There's no equivalent on macOS or in Excel Online, so this is a Windows-only tool, deliberately, rather than a weaker cross-platform one.</p>
+    <div class="req-list">
+      <div class="req-item"><span class="mark">▸</span><p><b style="color:var(--ink)">Desktop Excel, any recent version.</b> The workbook must already be open — VBABridge attaches to your session, it doesn't open files itself.</p></div>
+      <div class="req-item"><span class="mark">▸</span><p><b style="color:var(--ink)">One manual step, once:</b> enabling "Trust access to the VBA project object model" in Excel's Trust Center. That's Microsoft's own gate on programmatic access — not a VBABridge limitation, and not something any installer is allowed to script around.</p></div>
+      <div class="req-item"><span class="mark">▸</span><p><b style="color:var(--ink)">A one-click installer handles the rest</b> — checks Python, installs the package properly, and wires up Claude Desktop's config in one run.</p></div>
+    </div>
+  </section>
+
+  <section id="access">
+    <div class="access">
+      <div>
+        <span class="label">Pricing &amp; access</span>
+        <h2 style="margin-bottom:6px;">One license. One price. No subscription.</h2>
+        <div class="price-row">
+          <div class="price-tile">
+            <div class="n">$5</div>
+            <div class="l">International</div>
+          </div>
+          <div class="price-tile">
+            <div class="n">₹450</div>
+            <div class="l">India</div>
+          </div>
+        </div>
+        <p class="price-note" style="margin-bottom:18px;">One-time purchase, not a subscription. Priced in your local currency where that applies.</p>
+        <p class="lede" style="max-width:none;">VBABridge isn't in a public marketplace yet — every install is set up directly, one at a time. Email me, mention which price applies to you, and I'll send the installer and get you set up.</p>
+      </div>
+      <div class="confirm">
+        <span class="label" style="margin-bottom:10px;display:block;">Get in touch</span>
+        <p style="margin-bottom:18px;">Include a short description of the workbook you're maintaining — module count, what it does, what's painful about it — and I'll reply with next steps and a way to pay.</p>
+        <a class="btn btn-primary" href="mailto:zeomelabs@gmail.com?subject=VBABridge%20license" style="width:100%;justify-content:center;">zeomelabs@gmail.com</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="row">
+      <span>VBABridge — proprietary, all rights reserved. Built for Claude.</span>
+      <a href="#how">How it works</a>
+    </div>
+  </footer>
+</div>
+</body>
+</html>
